@@ -41,6 +41,8 @@ int main() {
     float area1;
     float pib1;
     int pontosTuristicos1;
+    float densidadePopulacional1; // Nova variável
+    float pibPerCapita1;          // Nova variável
 
     // Carta 2
     char estado2;
@@ -50,6 +52,8 @@ int main() {
     float area2;
     float pib2;
     int pontosTuristicos2;
+    float densidadePopulacional2; // Nova variável
+    float pibPerCapita2;          // Nova variável
 
     // Limpar a tela
     system("cls");
@@ -84,11 +88,24 @@ int main() {
     printf("Informe a Area (em km2): ");
     scanf("%f", &area1);
 
-    printf("Informe o PIB: ");
+    printf("Informe o PIB (em bilhoes): ");
     scanf("%f", &pib1);
 
     printf("Informe o Numero de Pontos Turisticos: ");
     scanf("%d", &pontosTuristicos1);
+
+    // Cálculo dos novos atributos para Carta 1
+    if (area1 > 0) {
+        densidadePopulacional1 = (float)populacao1 / area1;
+    } else {
+        densidadePopulacional1 = 0;
+    }
+    
+    if (populacao1 > 0) {
+        pibPerCapita1 = (pib1 * 1000000000) / populacao1; // Convertendo PIB para reais
+    } else {
+        pibPerCapita1 = 0;
+    }
 
     printf("\n");
 
@@ -114,11 +131,24 @@ int main() {
     printf("Informe a Area (em km2): ");
     scanf("%f", &area2);
 
-    printf("Informe o PIB: ");
+    printf("Informe o PIB (em bilhoes): ");
     scanf("%f", &pib2);
 
     printf("Informe o Numero de Pontos Turisticos: ");
     scanf("%d", &pontosTuristicos2);
+
+    // Cálculo dos novos atributos para Carta 2
+    if (area2 > 0) {
+        densidadePopulacional2 = (float)populacao2 / area2;
+    } else {
+        densidadePopulacional2 = 0;
+    }
+    
+    if (populacao2 > 0) {
+        pibPerCapita2 = (pib2 * 1000000000) / populacao2; // Convertendo PIB para reais
+    } else {
+        pibPerCapita2 = 0;
+    }
 
     // Limpar a tela para exibir as cartas
     system("cls");
@@ -182,70 +212,144 @@ int main() {
     setColor(10);
     printf("| Pts Turisticos: %-7d |\n", pontosTuristicos2);
     
+    // Linha 7: Densidade Populacional
+    setColor(11);
+    printf("| Dens. Pop: %-11.2f |  ", densidadePopulacional1);
+    setColor(10);
+    printf("| Dens. Pop: %-11.2f |\n", densidadePopulacional2);
+    
+    // Linha 8: PIB per capita
+    setColor(11);
+    printf("| PIB per capita: %-7.2f |  ", pibPerCapita1);
+    setColor(10);
+    printf("| PIB per capita: %-7.2f |\n", pibPerCapita2);
+    
     setColor(7); // Branco
     printf("+-------------------------+  +-------------------------+\n");
 
-    // Comparação de atributos
+    // Escolha do atributo para comparação (definido no código)
+    // Opções: 1-População, 2-Área, 3-PIB, 4-Pontos Turísticos, 5-Densidade Populacional, 6-PIB per capita
+    int atributoEscolhido = 5; // Escolhendo Densidade Populacional para comparação
+    char* nomeAtributo;
+    int vencedor = 0; // 0 = empate, 1 = carta 1, 2 = carta 2
+    
+    // Determinando o vencedor com base no atributo escolhido
+    switch (atributoEscolhido) {
+        case 1: // População (maior vence)
+            nomeAtributo = "Populacao";
+            if (populacao1 > populacao2) {
+                vencedor = 1;
+            } else if (populacao2 > populacao1) {
+                vencedor = 2;
+            }
+            break;
+            
+        case 2: // Área (maior vence)
+            nomeAtributo = "Area";
+            if (area1 > area2) {
+                vencedor = 1;
+            } else if (area2 > area1) {
+                vencedor = 2;
+            }
+            break;
+            
+        case 3: // PIB (maior vence)
+            nomeAtributo = "PIB";
+            if (pib1 > pib2) {
+                vencedor = 1;
+            } else if (pib2 > pib1) {
+                vencedor = 2;
+            }
+            break;
+            
+        case 4: // Pontos Turísticos (maior vence)
+            nomeAtributo = "Pontos Turisticos";
+            if (pontosTuristicos1 > pontosTuristicos2) {
+                vencedor = 1;
+            } else if (pontosTuristicos2 > pontosTuristicos1) {
+                vencedor = 2;
+            }
+            break;
+            
+        case 5: // Densidade Populacional (menor vence)
+            nomeAtributo = "Densidade Populacional";
+            if (densidadePopulacional1 < densidadePopulacional2) {
+                vencedor = 1;
+            } else if (densidadePopulacional2 < densidadePopulacional1) {
+                vencedor = 2;
+            }
+            break;
+            
+        case 6: // PIB per capita (maior vence)
+            nomeAtributo = "PIB per capita";
+            if (pibPerCapita1 > pibPerCapita2) {
+                vencedor = 1;
+            } else if (pibPerCapita2 > pibPerCapita1) {
+                vencedor = 2;
+            }
+            break;
+    }
+
+    // Exibição do resultado da comparação
     printf("\n");
     setColor(14); // Amarelo
     drawLine(60, '=');
-    printCentered("COMPARACAO DE ATRIBUTOS", 60);
+    printCentered("RESULTADO DO JOGO", 60);
     drawLine(60, '=');
     setColor(7); // Branco
     
-    // População
-    printf("\nPopulacao: ");
-    if (populacao1 > populacao2) {
-        setColor(11);
-        printf("Carta 1 vence");
-    } else if (populacao2 > populacao1) {
-        setColor(10);
-        printf("Carta 2 vence");
-    } else {
-        setColor(7);
-        printf("Empate");
+    printf("\nComparacao de cartas (Atributo: %s):\n\n", nomeAtributo);
+    
+    // Exibir valores do atributo escolhido para cada carta
+    switch (atributoEscolhido) {
+        case 1: // População
+            printf("Carta 1 - %s (%c): %d habitantes\n", cidade1, estado1, populacao1);
+            printf("Carta 2 - %s (%c): %d habitantes\n", cidade2, estado2, populacao2);
+            break;
+            
+        case 2: // Área
+            printf("Carta 1 - %s (%c): %.2f km2\n", cidade1, estado1, area1);
+            printf("Carta 2 - %s (%c): %.2f km2\n", cidade2, estado2, area2);
+            break;
+            
+        case 3: // PIB
+            printf("Carta 1 - %s (%c): %.2f bilhoes\n", cidade1, estado1, pib1);
+            printf("Carta 2 - %s (%c): %.2f bilhoes\n", cidade2, estado2, pib2);
+            break;
+            
+        case 4: // Pontos Turísticos
+            printf("Carta 1 - %s (%c): %d pontos\n", cidade1, estado1, pontosTuristicos1);
+            printf("Carta 2 - %s (%c): %d pontos\n", cidade2, estado2, pontosTuristicos2);
+            break;
+            
+        case 5: // Densidade Populacional
+            printf("Carta 1 - %s (%c): %.2f hab/km2\n", cidade1, estado1, densidadePopulacional1);
+            printf("Carta 2 - %s (%c): %.2f hab/km2\n", cidade2, estado2, densidadePopulacional2);
+            break;
+            
+        case 6: // PIB per capita
+            printf("Carta 1 - %s (%c): R$ %.2f\n", cidade1, estado1, pibPerCapita1);
+            printf("Carta 2 - %s (%c): R$ %.2f\n", cidade2, estado2, pibPerCapita2);
+            break;
     }
     
-    // Área
-    setColor(7);
-    printf("\nArea: ");
-    if (area1 > area2) {
-        setColor(11);
-        printf("Carta 1 vence");
-    } else if (area2 > area1) {
-        setColor(10);
-        printf("Carta 2 vence");
+    // Exibir o resultado
+    printf("\nResultado: ");
+    if (vencedor == 1) {
+        setColor(11); // Azul para Carta 1
+        printf("Carta 1 (%s) venceu!", cidade1);
+    } else if (vencedor == 2) {
+        setColor(10); // Verde para Carta 2
+        printf("Carta 2 (%s) venceu!", cidade2);
     } else {
-        setColor(7);
-        printf("Empate");
+        setColor(7); // Branco para empate
+        printf("Empate!");
     }
     
-    // PIB
-    setColor(7);
-    printf("\nPIB: ");
-    if (pib1 > pib2) {
-        setColor(11);
-        printf("Carta 1 vence");
-    } else if (pib2 > pib1) {
-        setColor(10);
-        printf("Carta 2 vence");
-    } else {
+    // Explicação do critério (para Densidade Populacional)
+    if (atributoEscolhido == 5) {
         setColor(7);
-        printf("Empate");
-    }
-    
-    // Pontos Turísticos
-    setColor(7);
-    printf("\nPontos Turisticos: ");
-    if (pontosTuristicos1 > pontosTuristicos2) {
-        setColor(11);
-        printf("Carta 1 vence");
-    } else if (pontosTuristicos2 > pontosTuristicos1) {
-        setColor(10);
-        printf("Carta 2 vence");
-    } else {
-        setColor(7);
-        printf("Empate");
+        printf("\n\nObs: Para Densidade Populacional, a carta com o MENOR valor vence!");
     }
     
     // Restaurar cor padrão
